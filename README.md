@@ -48,6 +48,8 @@ app.use('/public', express.static(__dirname + '/public'))
 // 유저가 /public으로 가게되면 __dirname + "/public" 폴더를 보여주도록 설정
 app.get('/', (req, res) => res.render('home'))
 // "/" 에서 home 파일을 render 하도록 설정
+app.get('/*', (req, res) => res.redirect('/'))
+// 어떤 페이지를 접근해도 강제로 "/"로 이동
 
 console.log('Hello')
 
@@ -73,4 +75,28 @@ link(rel="stylesheet", href="https://unpkg.com/mvp.css")
 ```
 
 5. 초기 세팅
-   ![screenshot](https://velog.velcdn.com/images%2Fevencoding%2Fpost%2F509331c1-5885-4c90-9474-83f9e5aaf4e8%2Fimage.png)
+
+![screenshot](https://velog.velcdn.com/images%2Fevencoding%2Fpost%2F509331c1-5885-4c90-9474-83f9e5aaf4e8%2Fimage.png)
+
+## Websocket (웹 소켓)
+
+- 사용자의 브라우저와 서버 사이의 인터액티브 통신 세션을 설정할 수 있게 하는 기술
+- 개발자는 웹 쇼켓 API를 통해 서버로 메시지를 보내고 서버의 응답을 위해 서버를 폴링하지 않고도 이벤트 중심 응답을 받을 수 있음
+- 웹 소켓 서버로 연결하고 연결을 통해 데이터를 보내고 받는 기본 인터페이스
+
+- `Server.js`
+
+```javascript
+const server = http.createServer(app)
+// app.js 호출
+const wss = new WebSocket.Server({ server })
+// WebSocket 서버 생성
+
+function handleConnection(socket) {
+  // param socket: 서버와 브라우저간의 연결 정보
+  console.log('socket', socket)
+}
+
+wss.on('connection', handleConnection)
+// on method: 이벤트를 기다림
+```
