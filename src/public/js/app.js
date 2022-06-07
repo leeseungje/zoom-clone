@@ -1,5 +1,1 @@
-function fn(event) {
-
-}
-
-form.addEventListener("submit", fn)
+const socket = new WebSocket(`ws://${window.location.host}`)
