@@ -100,3 +100,56 @@ function handleConnection(socket) {
 wss.on('connection', handleConnection)
 // on method: 이벤트를 기다림
 ```
+
+### backend에서 message를 전달하고 front에서 message받기
+
+= `server.js` 에서 message를 전달 한다.
+
+```javascript
+function handleConnection(socket) {
+  console.log('connected to Browser ✅')
+  // 서버가 response가 되면 node에 해당 log가 찍힌다.
+  socket.send('hello!!!')
+  // data 전달
+}
+```
+
+- `app.js` 에서 message를 받는다.
+
+```javascript
+socket.addEventListener('open', () => {
+  console.log('connected to server ✅')
+  // 서버와 연결이 되면 해당 log가 찍힌다.
+})
+
+socket.addEventListener('message', (message) => {
+  console.log('Just got this: ', message.data)
+  // data 접근한다.
+})
+
+socket.addEventListener('close', () => {
+  console.log('connected from server ❌')
+  // 서버가 연결이 끊기면 해당 log가 찍힌다.
+})
+```
+
+### font에서 message를 전달하고 front에서 message받기
+
+- `app.js` 에서 message를 전달한다.
+
+```javascript
+setTimeout(() => {
+  socket.send('hello from the browser!')
+}, 10000)
+```
+
+- `server.js` 에서 message를 받는다.
+
+```javascript
+function handleConnection(socket) {
+  socket.on('message', (message) => {
+    console.log(message.toString())
+    // front에서 10초뒤 메세지를 전달 했기 때문에 10초뒤에 node에 log가 찍힌다.
+  })
+}
+```

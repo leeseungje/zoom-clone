@@ -16,8 +16,10 @@ const server = http.createServer(app);
 const wss = new WebSocket.Server({ server })
 
 function handleConnection(socket) {
-    console.log("socket", socket)
-
+    console.log("connected to Browser ✅")
+    socket.on("close", () => console.log("Disconnected from Browser ❌"))
+    socket.on("message", (message) => { console.log(message.toString()) })
+    socket.send('hello!!!')
 }
 
 wss.on("connection", handleConnection)
