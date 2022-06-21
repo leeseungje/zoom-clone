@@ -1,17 +1,54 @@
-const socket = new WebSocket(`ws://${window.location.host}`)
+const socket = io();
 
-socket.addEventListener("open", () => {
-    console.log("connected to server ✅")
+const welcome = document.getElementById('welcome')
+const form = welcome.querySelector('form')
+const room = document.getElementById('room')
+
+room.hidden = true;
+
+let roomName;
+
+function addMessage(message) {
+    const ul = room.querySelector('ul')
+    const li = document.createElement('li')
+    li.innerText = message
+    ul.appendChild(li)
+}
+
+function handleMessageSubmit(event) {
+    event.preventDefault();
+    const input = room.querySelector('input')
+    socket.emit("new_message", input.value, roomName, () => {
+        addMessage(`You: ${input.value}`)
+    });
+}
+
+function showRoom() {
+    console.log('roomName', roomName)
+    welcome.hidden = true;
+    room.hidden = false;
+    const h3 = room.querySelector('h3')
+    h3.innerText = `Room ${roomName}`
+    const form = room.querySelector('form')
+    form.addEventListener('submit', handleMessageSubmit)
+}
+
+function handleRoomSubmit(event) {
+    event.preventDefault();
+    const input = form.querySelector('input');
+    socket.emit('enter_room', input.value, showRoom)
+    roomName = input.value
+    input.value = ''
+}
+
+form.addEventListener('submit', handleRoomSubmit)
+
+socket.on("welcome", () => {
+    addMessage('Someone Joined!')
 })
 
-socket.addEventListener("message", (message) => {
-    console.log("Just got this: ", message.data)
+socket.on("bye", () => {
+    addMessage('Someone has Left!!')
 })
 
-socket.addEventListener("close", () => {
-    console.log("Disconnected from server ❌")
-})
-
-setTimeout(() => {
-    socket.send("hello from the browser!")
-}, 10000);
+socket.on("new_message", addMessage)
