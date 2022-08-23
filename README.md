@@ -153,3 +153,7 @@ function handleConnection(socket) {
   })
 }
 ```
+
+### Adapter
+
+- 데이터를 저장하기 위해 서버 메모리가 필요한데 그걸 Adapter를 이용한다. (서버 메모리)
