@@ -103,7 +103,7 @@ wss.on('connection', handleConnection)
 
 ### backend에서 message를 전달하고 front에서 message받기
 
-= `server.js` 에서 message를 전달 한다.
+- `server.js` 에서 message를 전달 한다.
 
 ```javascript
 function handleConnection(socket) {
